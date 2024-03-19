@@ -1,0 +1,268 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+class Destination {
+    private String name;
+    private ArrayList<String> attractions;
+    private ArrayList<String> accommodations;
+
+    public Destination(String name) {
+        this.name = name;
+        attractions = new ArrayList<>();
+        accommodations = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<String> getAttractions() {
+        return attractions;
+    }
+
+    public ArrayList<String> getAccommodations() {
+        return accommodations;
+    }
+
+    public void addAttraction(String attraction) {
+        attractions.add(attraction);
+    }
+
+    public void addAccommodation(String accommodation) {
+        accommodations.add(accommodation);
+    }
+}
+
+public class MobiTravelGuideApplication extends Frame {
+    private TextField searchField;
+    private Button searchButton;
+    private TextArea resultArea;
+    private TextArea weatherArea;
+    private TextArea eventsArea;
+    private TextArea translationArea;
+
+    private ArrayList<Destination> destinations;
+
+    public MobiTravelGuideApplication() {
+        setTitle("Mobi Travel Guide");
+        setSize(700, 500);
+        setLayout(new BorderLayout());
+        setBackground(Color.WHITE);
+
+        searchField = new TextField(20);
+        searchButton = new Button("Search");
+        resultArea = new TextArea(10, 40);
+        weatherArea = new TextArea(5, 20);
+        eventsArea = new TextArea(5, 20);
+        translationArea = new TextArea(5, 20);
+
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String query = searchField.getText();
+                searchDestinations(query);
+            }
+        });
+
+        Panel searchPanel = new Panel();
+        searchPanel.setBackground(Color.LIGHT_GRAY);
+        searchPanel.add(new Label("Search Destinations:"));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        Panel resultPanel = new Panel(new GridLayout(1, 2));
+        resultPanel.add(resultArea);
+
+        Panel infoPanel = new Panel(new GridLayout(3, 1));
+        infoPanel.setBackground(Color.LIGHT_GRAY);
+        infoPanel.add(new Label("Weather Updates:"));
+        infoPanel.add(weatherArea);
+        infoPanel.add(new Label("Events:"));
+        infoPanel.add(eventsArea);
+        infoPanel.add(new Label("Translation:"));
+        infoPanel.add(translationArea);
+
+        resultPanel.add(infoPanel);
+
+        add(BorderLayout.NORTH, searchPanel);
+        add(BorderLayout.CENTER, resultPanel);
+
+        initializeDestinations();
+    }
+
+    private void initializeDestinations() {
+        // Sample data for five countries
+        destinations = new ArrayList<>();
+
+        // Sample data for Spain
+        Destination spain = new Destination("Spain");
+        spain.addAttraction("Sagrada Familia");
+        spain.addAttraction("Prado Museum");
+        spain.addAccommodation("Hotel Ritz Madrid");
+        spain.addAccommodation("Hotel Arts Barcelona");
+        destinations.add(spain);
+
+        // Sample data for France
+        Destination france = new Destination("France");
+        france.addAttraction("Eiffel Tower");
+        france.addAttraction("Louvre Museum");
+        france.addAccommodation("Hotel Plaza Athénée");
+        france.addAccommodation("Hôtel de Crillon");
+        destinations.add(france);
+
+        // Sample data for England
+        Destination england = new Destination("England");
+        england.addAttraction("Big Ben");
+        england.addAttraction("Buckingham Palace");
+        england.addAccommodation("The Ritz London");
+        england.addAccommodation("The Dorchester");
+        destinations.add(england);
+
+        // Sample data for India
+        Destination india = new Destination("India");
+        india.addAttraction("Taj Mahal");
+        india.addAttraction("Jaipur City Palace");
+        india.addAccommodation("Taj Lake Palace");
+        india.addAccommodation("The Oberoi Amarvilas");
+        destinations.add(india);
+
+        // Sample data for Wales
+        Destination wales = new Destination("Wales");
+        wales.addAttraction("Snowdonia National Park");
+        wales.addAttraction("Cardiff Castle");
+        wales.addAccommodation("The Celtic Manor Resort");
+        wales.addAccommodation("St. David's Hotel & Spa");
+        destinations.add(wales);
+    }
+
+    private void searchDestinations(String query) {
+        resultArea.setText("Searching for: " + query + "\n");
+
+        for (Destination destination : destinations) {
+            if (destination.getName().toLowerCase().contains(query.toLowerCase())) {
+                resultArea.append("Country: " + destination.getName() + "\n");
+                resultArea.append("Attractions:\n");
+                for (String attraction : destination.getAttractions()) {
+                    resultArea.append("- " + attraction + "\n");
+                }
+                resultArea.append("Accommodations:\n");
+                for (String accommodation : destination.getAccommodations()) {
+                    resultArea.append("- " + accommodation + "\n");
+                }
+                resultArea.append("\n");
+            }
+        }
+
+        // Simulated real-time updates
+        updateWeather(query);
+        updateEvents(query);
+        translate(query);
+    }
+
+    // Simulated methods for real-time updates and translation
+    private void updateWeather(String location) {
+        String weatherInfo;
+        switch (location.toLowerCase()) {
+            case "spain":
+                weatherInfo = "Weather updates for Spain:\n" +
+                        "Temperature: 25°C\n" +
+                        "Conditions: Sunny\n" +
+                        "Wind: 5 mph\n";
+                break;
+            case "france":
+                weatherInfo = "Weather updates for France:\n" +
+                        "Temperature: 20°C\n" +
+                        "Conditions: Cloudy\n" +
+                        "Wind: 8 mph\n";
+                break;
+            case "england":
+                weatherInfo = "Weather updates for England:\n" +
+                        "Temperature: 15°C\n" +
+                        "Conditions: Rainy\n" +
+                        "Wind: 10 mph\n";
+                break;
+            case "india":
+                weatherInfo = "Weather updates for India:\n" +
+                        "Temperature: 35°C\n" +
+                        "Conditions: Hot and Humid\n" +
+                        "Wind: 3 mph\n";
+                break;
+            case "wales":
+                weatherInfo = "Weather updates for Wales:\n" +
+                        "Temperature: 18°C\n" +
+                        "Conditions: Partly Cloudy\n" +
+                        "Wind: 7 mph\n";
+                break;
+            default:
+                weatherInfo = "Weather information not available for " + location;
+                break;
+        }
+        weatherArea.setText(weatherInfo);
+    }
+
+    private void updateEvents(String location) {
+        String eventInfo;
+        switch (location.toLowerCase()) {
+            case "spain":
+                eventInfo = "Events happening in Spain:\n" +
+                        "1. Flamenco Festival - Date: 2024-04-15\n" +
+                        "2. La Tomatina - Date: 2024-08-28\n";
+                break;
+            case "france":
+                eventInfo = "Events happening in France:\n" +
+                        "1. Cannes Film Festival - Date: 2024-05-14\n" +
+                        "2. Bastille Day - Date: 2024-07-14\n";
+                break;
+            case "england":
+                eventInfo = "Events happening in England:\n" +
+                        "1. Wimbledon - Date: 2024-07-01\n" +
+                        "2. Notting Hill Carnival - Date: 2024-08-26\n";
+                break;
+            case "india":
+                eventInfo = "Events happening in India:\n" +
+                        "1. Diwali - Date: 2024-10-25\n" +
+                        "2. Holi - Date: 2024-03-21\n";
+                break;
+            case "wales":
+                eventInfo = "Events happening in Wales:\n" +
+                        "1. Hay Festival - Date: 2024-05-23\n" +
+                        "2. National Eisteddfod - Date: 2024-08-03\n";
+                break;
+            default:
+                eventInfo = "Events information not available for " + location;
+                break;
+        }
+        eventsArea.setText(eventInfo);
+    }
+
+    private void translate(String text) {
+        String translatedLanguage = "";
+        switch (text.toLowerCase()) {
+            case "france":
+                translatedLanguage = "French";
+                break;
+            case "spain":
+                translatedLanguage = "Spanish";
+                break;
+            case "india":
+                translatedLanguage = "Hindi";
+                break;
+            case "england":
+                translatedLanguage = "English";
+                break;
+            case "wales":
+                translatedLanguage = "Welsh";
+                break;
+            default:
+                translatedLanguage = "Translation not available for " + text;
+                break;
+        }
+        translationArea.setText("Translated language for  " + text + " is " + translatedLanguage);
+    }
+
+    public static void main(String[] args) {
+        MobiTravelGuideApplication app = new MobiTravelGuideApplication();
+        app.setVisible(true);
+    }
+}
